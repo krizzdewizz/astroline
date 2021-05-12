@@ -38,7 +38,7 @@ export function astroline({
   const [regex, format = ''] = args;
 
   if (!regex) {
-    console.log('usage: regex [output line containing $1, $2 etc] [-x to execute] [-0, -1 etc to output line with that index]');
+    console.log('usage: regex [output line containing $1, $2 etc] [-x to execute] [-0, -1... to output line with that index]');
     return;
   }
 
@@ -63,7 +63,7 @@ export function astroline({
 
     lineIndex++;
 
-    if (filterByLineIndex && !lineIndices[String(lineIndex)]) {
+    if (filterByLineIndex && !lineIndices[lineIndex]) {
       return;
     }
 

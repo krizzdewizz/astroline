@@ -1,4 +1,5 @@
 module.exports = {
-  coverageProvider: "v8",
-  testEnvironment: "node"
+  testMatch: ['**/+(*.)+(spec|test).+(ts)?(x)'],
+  coverageProvider: 'v8',
+  testEnvironment: 'node',
 };
