@@ -10,7 +10,7 @@ describe('astroline', () => {
     let line;
 
     astroline({
-      args: [, , ...args],
+      inputArgs: [, , ...args],
       printOut: s => out.push(s),
       createReadline: () => ({
         on: (_, lineCallback) => line = lineCallback

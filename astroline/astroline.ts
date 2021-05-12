@@ -11,20 +11,16 @@ function xargs(cmd: string) {
 }
 
 function fmt(match: RegExpMatchArray, format: string): string {
-  let out = format;
-  for (let i = 0; i < match.length; i++) {
-    out = replaceAll(out, `\$${i}`, match[i]);
-  }
-  return out;
+  return match.reduce((s, curr, i) => replaceAll(s, `\$${i}`, curr), format);
 }
 
-export function astroline({ args, printOut, createReadline, processExit, }: {
-  args: string[],
+export function astroline({ inputArgs, printOut, createReadline, processExit, }: {
+  inputArgs: string[],
   printOut: (s: string) => void,
   createReadline: () => any,
-  processExit: (code) => void
+  processExit: (code: number) => void
 } = {
-  args: process.argv.slice(2),
+  inputArgs: process.argv.slice(2),
   printOut: s => process.stdout.write(s),
   createReadline: () => readline.createInterface({
     input: process.stdin,
@@ -34,9 +30,7 @@ export function astroline({ args, printOut, createReadline, processExit, }: {
   processExit: code => process.exit(code),
 }) {
 
-  const { args: newArgs, lineIndices, exec } = parseArgs(args);
-  args = newArgs;
-
+  const { args, lineIndices, exec } = parseArgs(inputArgs);
   const [regex, format = ''] = args;
 
   if (!regex) {
@@ -46,9 +40,7 @@ export function astroline({ args, printOut, createReadline, processExit, }: {
     return;
   }
 
-  const print: (s: string) => void = exec
-      ? xargs
-      : printOut;
+  const print: (s: string) => void = exec ? xargs : printOut;
 
   const re = new RegExp(regex);
 
@@ -80,15 +72,7 @@ export function astroline({ args, printOut, createReadline, processExit, }: {
     if (format) {
       print(fmt(match, format));
     } else {
-      if (match.length === 1) {
-        print(line);
-      } else {
-        let s = '';
-        for (let i = 1; i < match.length; i++) {
-          s += match[i];
-        }
-        print(s);
-      }
+      print(match.length === 1 ? match[0] : match.slice(1).join(''));
     }
   });
 }
