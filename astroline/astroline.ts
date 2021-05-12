@@ -18,19 +18,21 @@ function fmt(match: RegExpMatchArray, format: string): string {
   return out;
 }
 
-export function astroline({
-                            args = process.argv.slice(2),
-                            printOut = s => process.stdout.write(s),
-                            createReadline = () => readline.createInterface({
-                              input: process.stdin,
-                              output: process.stdout,
-                              terminal: false,
-                            })
-                          }: {
-  args?: string[],
-  printOut?: (s: string) => void,
-  createReadline?: () => any
-} = {}) {
+export function astroline({ args, printOut, createReadline, processExit, }: {
+  args: string[],
+  printOut: (s: string) => void,
+  createReadline: () => any,
+  processExit: (code) => void
+} = {
+  args: process.argv.slice(2),
+  printOut: s => process.stdout.write(s),
+  createReadline: () => readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+    terminal: false,
+  }),
+  processExit: code => process.exit(code),
+}) {
 
   const { args: newArgs, lineIndices, exec } = parseArgs(args);
   args = newArgs;
@@ -38,7 +40,9 @@ export function astroline({
   const [regex, format = ''] = args;
 
   if (!regex) {
-    console.log('usage: regex [output line containing $1, $2 etc] [-x to execute] [-0, -1... to output line with that index]');
+    printOut(
+        `usage: regex [output line containing $1, $2 etc] [-x to execute] [-0, -1... to output line with that index]${EOL}`);
+    processExit(1);
     return;
   }
 
