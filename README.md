@@ -14,7 +14,8 @@ al regex [output line containing $1, $2 etc] [-x to execute] [-0, -1...output li
 ```
 
 The output line is optional. if empty the whole line is printed, or the regex groups if any
-The output line can refer to the regex groups $0 (whole line), $1, $2 etc.
+
+The output line can refer to the regex groups `$0` (whole line), `$1`, `$2` etc.
 
 ## examples
 
