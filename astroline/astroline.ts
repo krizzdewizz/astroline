@@ -50,6 +50,10 @@ export function astroline({ inputArgs, printOut, createReadline, processExit, }:
 
   const rl = createReadline();
 
+  rl.on('close', () => {
+    print(EOL);
+  });
+
   rl.on('line', (line: string) => {
 
     const match = line.match(re);
