@@ -9,15 +9,26 @@ export function indexArg(arg: string): number {
   return match ? Number(match[1]) : undefined;
 }
 
-export function parseArgs(inputArgs: string[]): { args: string[], lineIndices: Record<number, true>, exec: boolean } {
+export function parseArgs(inputArgs: string[]): {
+  args: string[],
+  lineIndices: Record<number, true>,
+  exec: boolean,
+  count: boolean
+} {
 
   const args = [];
   const lineIndices = {};
   let exec = false;
+  let count = false;
 
   inputArgs.forEach(a => {
     if (a === '-x') {
       exec = true;
+      return;
+    }
+
+    if (a === '-c') {
+      count = true;
       return;
     }
 
@@ -29,5 +40,5 @@ export function parseArgs(inputArgs: string[]): { args: string[], lineIndices: R
     }
   });
 
-  return { args, lineIndices, exec };
+  return { args, lineIndices, exec, count };
 }

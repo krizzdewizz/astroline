@@ -8,17 +8,24 @@ describe('astroline', () => {
   function setup(...args: string[]) {
     const out = [];
     let line;
+    let close;
 
     astroline({
       inputArgs: [, , ...args],
       printOut: s => out.push(s),
       createReadline: () => ({
-        on: (_, lineCallback) => line = lineCallback
+        on: (event, cb) => {
+          if (event === 'close') {
+            close = cb;
+          } else {
+            line = cb;
+          }
+        }
       }),
       processExit: code => exitCode = code
     });
 
-    return { out, line };
+    return { out, line, close };
   }
 
   it('should print usage', () => {
@@ -76,5 +83,19 @@ describe('astroline', () => {
     line('hello2');
 
     expect(out).toEqual(['hello1', EOL, 'hello2']);
+  });
+
+  it('should output count', () => {
+    const { out, line, close } = setup('^he.*', '-c');
+
+    line('hello0');
+    line('world');
+    line('hello1');
+    line('bye');
+    line('hello2');
+
+    close();
+
+    expect(out).toEqual(['3', EOL]);
   });
 });

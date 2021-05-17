@@ -21,7 +21,7 @@ The output line can refer to the regex groups `$0` (whole line), `$1`, `$2` etc.
 
 parse a file's date
 ```
-dir | al "^(\d{2}\.\d{2}\.\d{4}).*" "$1"
+dir | al "^(.{10}).*" "$1"
 
 12.05.2021
 12.05.2021

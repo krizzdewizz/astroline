@@ -25,17 +25,17 @@ export function astroline({ inputArgs, printOut, createReadline, processExit, }:
   createReadline: () => readline.createInterface({
     input: process.stdin,
     output: process.stdout,
-    terminal: false,
+    terminal: false
   }),
   processExit: code => process.exit(code),
 }) {
 
-  const { args, lineIndices, exec } = parseArgs(inputArgs);
+  const { args, lineIndices, exec, count } = parseArgs(inputArgs);
   const [regex, format = ''] = args;
 
   if (!regex) {
     printOut(
-        `usage: regex [output line containing $1, $2 etc] [-x to execute] [-0, -1... to output line with that index]${EOL}`);
+        `usage: regex [output line containing $1, $2 etc] [-x to execute] [-c to return count lines] [-0, -1... to output line with that index]${EOL}`);
     processExit(1);
     return;
   }
@@ -46,15 +46,30 @@ export function astroline({ inputArgs, printOut, createReadline, processExit, }:
 
   let hadLine = false;
   let lineIndex = -1;
+  let terminate = false;
   const filterByLineIndex = Object.keys(lineIndices).length > 0;
 
   const rl = createReadline();
 
+  process.on('SIGINT', () => {
+    terminate = true;
+    rl.close();
+  });
+
   rl.on('close', () => {
+    if (terminate) {
+      return;
+    }
+    if (count) {
+      print(String(lineIndex + 1));
+    }
     print(EOL);
   });
 
   rl.on('line', (line: string) => {
+    if (terminate) {
+      return;
+    }
 
     const match = line.match(re);
     if (!match) {
@@ -63,7 +78,7 @@ export function astroline({ inputArgs, printOut, createReadline, processExit, }:
 
     lineIndex++;
 
-    if (filterByLineIndex && !lineIndices[lineIndex]) {
+    if (count || filterByLineIndex && !lineIndices[lineIndex]) {
       return;
     }
 
