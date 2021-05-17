@@ -34,6 +34,8 @@ export function astroline({ inputArgs, printOut, createReadline, processExit }: 
   const [regex, format = ''] = args;
 
   if (!regex) {
+    const delim = process.platform === "win32" ? '"' : '\'';
+    const example = replaceAll('echo "hello world" | al "(hello).*" "$1 astroline"', '"', delim);
     printOut(`usage: regex [template] [-x] [-c] [-0, -1...]
 
   regex       Regular expression. All matching lines are printed
@@ -44,7 +46,7 @@ export function astroline({ inputArgs, printOut, createReadline, processExit }: 
   -0, -1...   Print line with that index
   
 example:
-  echo "hello world" | al "(hello).*" "$1 astroline"  
+  ${example}  
 `);
     processExit(1);
     return;
