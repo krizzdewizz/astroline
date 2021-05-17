@@ -14,7 +14,7 @@ function fmt(match: RegExpMatchArray, format: string): string {
   return match.reduce((s, curr, i) => replaceAll(s, `\$${i}`, curr), format);
 }
 
-export function astroline({ inputArgs, printOut, createReadline, processExit, }: {
+export function astroline({ inputArgs, printOut, createReadline, processExit }: {
   inputArgs: string[],
   printOut: (s: string) => void,
   createReadline: () => any,
@@ -34,8 +34,18 @@ export function astroline({ inputArgs, printOut, createReadline, processExit, }:
   const [regex, format = ''] = args;
 
   if (!regex) {
-    printOut(
-        `usage: regex [output line containing $1, $2 etc] [-x to execute] [-c to return count lines] [-0, -1... to output line with that index]${EOL}`);
+    printOut(`usage: regex [template] [-x] [-c] [-0, -1...]
+
+  regex       Regular expression. All matching lines are printed
+  template    Output line containing $0, $1...
+              If missing, all regex groups are printed or the whole line if there are no groups
+  -x          Execute line instead of printing it
+  -c          Print line count
+  -0, -1...   Print line with that index
+  
+example:
+  echo "hello world" | al "(hello).*" "$1 astroline"  
+`);
     processExit(1);
     return;
   }

@@ -33,7 +33,6 @@ describe('astroline', () => {
 
     expect(line).toBeUndefined();
     expect(out[0].startsWith('usage:')).toBe(true);
-    expect(out[0].endsWith(EOL)).toBe(true);
     expect(exitCode).toBe(1);
   });
 

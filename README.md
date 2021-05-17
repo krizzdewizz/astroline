@@ -10,12 +10,15 @@ npm run build
 
 ## usage
 ```
-al regex [output line containing $1, $2 etc] [-x to execute] [-0, -1...output line with that index]
+usage: regex [template] [-x] [-c] [-0, -1...]
+
+  regex       Regular expression. All matching lines are printed
+  template    Output line containing $0, $1...
+              If missing, all regex groups are printed or the whole line if there are no groups
+  -x          Execute line instead of printing it
+  -c          Print line count
+  -0, -1...   Print line with that index
 ```
-
-The output line is optional. if empty the whole line is printed, or the regex groups if any.
-
-The output line can refer to the regex groups `$0` (whole line), `$1`, `$2` etc.
 
 ## examples
 
